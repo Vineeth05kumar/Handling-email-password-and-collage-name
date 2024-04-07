@@ -9,13 +9,13 @@ function App() {
 
   useEffect(() => {
     const storeUserInfo = localStorage.getItem("iAmInside");
-
+    console.log("i am in app")
     if (storeUserInfo === "1") {
       setIsLoggedIn(true);
     }
   }, []);
 
-  const loginHandler = (email, password) => {
+  const loginHandler = (email, password, collage) => {
     // We should of course check email and password
     // But it's just a dummy/ demo anyways
     localStorage.setItem("iAmInside", "1");
