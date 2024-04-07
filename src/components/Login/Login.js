@@ -1,4 +1,4 @@
-import React, {  useReducer } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
@@ -34,8 +34,6 @@ const collageReducer = (state, action) => {
   return { value: "", isValid: false };
 };
 
-
-
 const Login = (props) => {
   // const [enteredEmail, setEnteredEmail] = useState("");
   // const [emailIsValid, setEmailIsValid] = useState();
@@ -43,7 +41,7 @@ const Login = (props) => {
   // const [passwordIsValid, setPasswordIsValid] = useState();
   // const [enteredCollage, setEnteredCollage] = useState("");
   // const [collageIsValid, setCollageIsValid] = useState();
-  // const [formIsValid, setFormIsValid] = useState(false);
+  const [formIsValid, setFormIsValid] = useState(false);
 
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: "",
@@ -60,20 +58,20 @@ const Login = (props) => {
     isValid: null,
   });
 
-  // useEffect(() => {
-  //   console.log("i am in login");
-  //   const magicDelay = setTimeout(() => {
-  //     setFormIsValid(
-  //       enteredEmail.includes("@") &&
-  //         enteredPassword.trim().length > 6 &&
-  //         enteredCollage.trim().length > 0
-  //     );
-  //   }, 500);
-  //   return () => {
-  //     clearTimeout(magicDelay);
-  //     console.log("inside cleanup");
-  //   };
-  // }, [enteredEmail, enteredPassword, enteredCollage]);
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
+  const { isValid: collageIsValid } = collageState;
+
+  useEffect(() => {
+    console.log("i am in login");
+    const magicDelay = setTimeout(() => {
+      setFormIsValid(emailIsValid && passwordIsValid && collageIsValid > 0);
+    }, 500);
+    return () => {
+      clearTimeout(magicDelay);
+      console.log("inside cleanup");
+    };
+  }, [emailIsValid, passwordIsValid, collageIsValid]);
 
   const emailChangeHandler = (event) => {
     dispatchEmail({ type: "USER_INPUT", val: event.target.value });
@@ -84,7 +82,7 @@ const Login = (props) => {
   };
 
   const collageChangeHandler = (event) => {
-    dispatchCollage({type: "USER_COLLAGE", val: event.target.value});
+    dispatchCollage({ type: "USER_COLLAGE", val: event.target.value });
   };
 
   const validateEmailHandler = () => {
@@ -96,11 +94,9 @@ const Login = (props) => {
   };
 
   const validateCollageHandler = () => {
-    dispatchCollage({type: "USER_COLLAGE_BLUR"});
+    dispatchCollage({ type: "USER_COLLAGE_BLUR" });
   };
 
-  const formIsValid =
-    emailState.isValid && passwordState.isValid && collageState.isValid;
 
   const submitHandler = (event) => {
     event.preventDefault();
